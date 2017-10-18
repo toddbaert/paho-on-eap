@@ -105,23 +105,29 @@
 			<!-- <acceptor name="mqtt">tcp://0.0.0.0:1884?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT,CORE;useEpoll=true</acceptor> -->
 
 			<!-- MQTT Acceptor with SSL -->
+			<!-- TODD: here I added CORE to the protocols to support clustering, along with MQTT -->
 			<acceptor name="mqtt">tcp://0.0.0.0:1883?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT,CORE;useEpoll=true;sslEnabled=true;keyStorePath=/path/to/keystore.jks;keyStorePassword=password;needClientAuth=false</acceptor>
-
 		</acceptors>
 
+		<!-- TODD: define the connectors so the nodes can communicate -->
 		<connectors>
 			<connector name="mqtt-node1-connector">tcp://localhost:1883</connector>
 			<connector name="mqtt-node2-connector">tcp://localhost:1884</connector>
 		</connectors>
 
+		<!-- TODD: credentials for the cluster -->
 		<cluster-user>admin</cluster-user>
 		<cluster-password>password</cluster-password>
 
 		<cluster-connections>
 			<cluster-connection name="static-cluster">
 				<address>bbymqtt</address>
+				<!-- TODD: address to apply this cluster to - supports wildcards (#) -->
 				<connector-ref>mqtt-node1-connector</connector-ref>
+				<!-- TODD: how to balance the load STRICK is round-robin. ON_DEMAND forwards to active consumers
+				and may therefor perform better. STRICK is good for demoing and testing -->
 				<message-load-balancing>STRICT</message-load-balancing>
+				<!-- TODD: define other brokers to connect to -->
 				<static-connectors>
 					<connector-ref>mqtt-node2-connector</connector-ref>
 				</static-connectors>
@@ -149,7 +155,6 @@
 			<!-- if you define auto-create on certain queues, management has to be 
 				auto-create -->
 			<address-setting match="activemq.management#">
-				<redistribution-delay>0</redistribution-delay>
 				<dead-letter-address>DLQ</dead-letter-address>
 				<expiry-address>ExpiryQueue</expiry-address>
 				<redelivery-delay>0</redelivery-delay>
@@ -165,6 +170,10 @@
 			</address-setting>
 			<!--default for catch all -->
 			<address-setting match="#">
+				
+				<!-- TODD: here we define the amount of time before we wait with no consumers before re-delivery -->			
+				<redistribution-delay>0</redistribution-delay>
+			
 				<dead-letter-address>DLQ</dead-letter-address>
 				<expiry-address>ExpiryQueue</expiry-address>
 				<redelivery-delay>0</redelivery-delay>
