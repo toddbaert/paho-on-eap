@@ -45,20 +45,12 @@ public class PahoRunnable implements Runnable{
     connOpts = new MqttConnectOptions();
     connOpts.setCleanSession(false);
     connOpts.setServerURIs(serverUrls);
-  
-    try {
-      sampleClient = new MqttClient("ssl://localhost:1883", "paho-demo", persistence);
-      sampleClient.setCallback(callback);
-    } catch (MqttException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
 
     try {
     
       while (!stopped) {
         
-          if (!sampleClient.isConnected()) {
+          if (sampleClient == null || !sampleClient.isConnected()) {
             connect();
             sampleClient.subscribe(topic);
           }
@@ -88,6 +80,8 @@ public class PahoRunnable implements Runnable{
     
     while (connecting && !stopped) {
       try {
+        sampleClient = new MqttClient("ssl://localhost:1883", "paho-demo", persistence);
+        sampleClient.setCallback(callback);
         sampleClient.connect(connOpts);
         connecting = false;
       } catch (MqttException e) {
