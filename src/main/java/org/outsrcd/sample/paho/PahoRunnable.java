@@ -19,7 +19,7 @@ public class PahoRunnable implements Runnable{
   volatile boolean stopped = false;
   String[] serverUrls = new String[] { "ssl://localhost:1883", "ssl://localhost:1884" };
   
-  // callback to fire on receive messages
+  // callback to fire on received messages
   MqttCallback callback = new MqttCallback() {
 
     public void connectionLost(Throwable arg0) {
@@ -80,8 +80,13 @@ public class PahoRunnable implements Runnable{
     
     while (connecting && !stopped) {
       try {
-        sampleClient = new MqttClient("ssl://localhost:1883", "paho-demo", persistence);
-        sampleClient.setCallback(callback);
+        
+        if (sampleClient == null) {
+          sampleClient = new MqttClient("ssl://localhost:1883", "paho-demo", persistence);
+          sampleClient.setCallback(callback);
+        }       
+
+        // connect will attempt to connect to any of the URLs defined in serverUrls
         sampleClient.connect(connOpts);
         connecting = false;
       } catch (MqttException e) {
