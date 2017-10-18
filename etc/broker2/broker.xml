@@ -121,8 +121,8 @@
 
 		<cluster-connections>
 			<cluster-connection name="static-cluster">
-				<!-- TODD: address to apply this cluster to - supports wildcards (#) -->
-				<address>bbymqtt</address>				
+				<!-- TODD: address to apply this cluster to. Do not invlude if you want all topics clustered -->
+				<!-- <address>bbymqtt</address>	 -->			
 				<connector-ref>mqtt-node2-connector</connector-ref>
 				<!-- TODD: how to balance the load STRICK is round-robin. ON_DEMAND forwards to active consumers
 				and may therefor perform better. STRICK is good for demoing and testing -->

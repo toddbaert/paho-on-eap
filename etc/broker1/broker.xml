@@ -102,7 +102,7 @@
 			<!-- <acceptor name="hornetq">tcp://0.0.0.0:5445?protocols=HORNETQ,STOMP;useEpoll=true</acceptor> -->
 
 			<!-- MQTT Acceptor -->
-			<!-- <acceptor name="mqtt">tcp://0.0.0.0:1884?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT,CORE;useEpoll=true</acceptor> -->
+			<!-- <acceptor name="mqtt">tcp://0.0.0.0:1883?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT,CORE;useEpoll=true</acceptor> -->
 
 			<!-- MQTT Acceptor with SSL -->
 			<!-- TODD: here I added CORE to the protocols to support clustering, along with MQTT -->
@@ -121,8 +121,8 @@
 
 		<cluster-connections>
 			<cluster-connection name="static-cluster">
-				<address>bbymqtt</address>
-				<!-- TODD: address to apply this cluster to - supports wildcards (#) -->
+				<!-- TODD: address to apply this cluster to. Do not invlude if you want all topics clustered -->
+				<!-- <address>bbymqtt</address>	 -->	
 				<connector-ref>mqtt-node1-connector</connector-ref>
 				<!-- TODD: how to balance the load STRICK is round-robin. ON_DEMAND forwards to active consumers
 				and may therefor perform better. STRICK is good for demoing and testing -->
