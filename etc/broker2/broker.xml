@@ -89,7 +89,7 @@
 				at this low mark -->
 
 			<!-- Acceptor for every supported protocol -->
-			<!-- <acceptor name="artemis">tcp://0.0.0.0:61616?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=CORE,AMQP,STOMP,HORNETQ,MQTT,OPENWIRE;useEpoll=true;amqpCredits=1000;amqpLowCredits=300</acceptor> -->
+			<!-- <acceptor name="artemis">tcp://0.0.0.0:61617?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=CORE,AMQP,STOMP,HORNETQ,MQTT,OPENWIRE;useEpoll=true;amqpCredits=1000;amqpLowCredits=300</acceptor> -->
 
 			<!-- AMQP Acceptor. Listens on default AMQP port for AMQP traffic. -->
 			<!-- <acceptor name="amqp">tcp://0.0.0.0:5672?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpMinCredits=300</acceptor> -->
@@ -102,15 +102,15 @@
 			<!-- <acceptor name="hornetq">tcp://0.0.0.0:5445?protocols=HORNETQ,STOMP;useEpoll=true</acceptor> -->
 
 			<!-- MQTT Acceptor -->
-			<!-- <acceptor name="mqtt">tcp://0.0.0.0:1883?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT,CORE;useEpoll=true</acceptor> -->
+			<!-- <acceptor name="mqtt">tcp://0.0.0.0:1884?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT,CORE;useEpoll=true</acceptor> -->
 
 			<!-- TODD:CORE protocol for clustering support -->
-			<acceptor name="core">tcp://localhost:61616?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=CORE;useEpoll=true;sslEnabled=true;keyStorePath=/path/to/keystore.jks;keyStorePassword=password;enabledProtocols=TLSv1,TLSv1.1,TLSv1.2;needClientAuth=false</acceptor>
+			<acceptor name="core">tcp://localhost:61617?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=CORE;useEpoll=true;sslEnabled=true;keyStorePath=/path/to/keystore.jks;keyStorePassword=password;enabledProtocols=TLSv1,TLSv1.1,TLSv1.2;needClientAuth=false</acceptor>
 
 			<!-- MQTT Acceptor with SSL -->
 			<!-- TODD: MQTT Acceptor with SSL and mutual auth -->
-			<!-- <acceptor name="mqtt">tcp://0.0.0.0:1883?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT;useEpoll=true;sslEnabled=true;keyStorePath=/path/to/keystore.jks;keyStorePassword=password;trustStorePath=/path/to/keystore.jks;trustStorePassword=password;needClientAuth=true</acceptor> -->
-			<acceptor name="mqtt">tcp://localhost:1883?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT;useEpoll=true;sslEnabled=true;keyStorePath=/path/to/keystore.jks;keyStorePassword=password;trustStorePath=/path/to/keystore.jks;trustStorePassword=password;enabledProtocols=TLSv1,TLSv1.1,TLSv1.2;needClientAuth=false</acceptor>
+			<!-- <acceptor name="mqtt">tcp://0.0.0.0:1884?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT;useEpoll=true;sslEnabled=true;keyStorePath=/path/to/keystore.jks;keyStorePassword=password;trustStorePath=/path/to/keystore.jks;trustStorePassword=password;needClientAuth=true</acceptor> -->
+			<acceptor name="mqtt">tcp://localhost:1884?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT;useEpoll=true;sslEnabled=true;keyStorePath=/path/to/keystore.jks;keyStorePassword=password;trustStorePath=/path/to/keystore.jks;trustStorePassword=password;enabledProtocols=TLSv1,TLSv1.1,TLSv1.2;needClientAuth=false</acceptor>
 		</acceptors>
 
 		<!-- TODD: define the connectors so the nodes can communicate -->
@@ -126,14 +126,14 @@
 		<cluster-connections>
 			<cluster-connection name="static-cluster">
 				<!-- TODD: address to apply this cluster to. Do not invlude if you want all topics clustered -->
-				<!-- <address>camael</address> -->
-				<connector-ref>mqtt-node1-connector</connector-ref>
+				<!-- <address>bbymqtt</address>	 -->
+				<connector-ref>mqtt-node2-connector</connector-ref>
 				<!-- TODD: how to balance the load STRICK is round-robin. ON_DEMAND forwards to active consumers
 				and may therefor perform better. STRICK is good for demoing and testing -->
 				<message-load-balancing>STRICT</message-load-balancing>
 				<!-- TODD: define other brokers to connect to -->
 				<static-connectors>
-					<connector-ref>mqtt-node2-connector</connector-ref>
+					<connector-ref>mqtt-node1-connector</connector-ref>
 				</static-connectors>
 			</cluster-connection>
 		</cluster-connections>
