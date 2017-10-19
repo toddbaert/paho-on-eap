@@ -106,7 +106,7 @@
 
 			<!-- MQTT Acceptor with SSL -->
 			<!-- TODD: here I added CORE to the protocols to support clustering, along with MQTT -->
-			<acceptor name="mqtt">tcp://0.0.0.0:1883?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT,CORE;useEpoll=true;sslEnabled=true;keyStorePath=/path/to/keystore.jks;keyStorePassword=password;needClientAuth=false</acceptor>
+			<acceptor name="mqtt">tcp://0.0.0.0:1883?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT,CORE;useEpoll=true;sslEnabled=true;keyStorePath=/path/to/keystore.jks;keyStorePassword=password;trustStorePath=/path/to/truststore.jks;trustStorePassword=password;needClientAuth=trueneedClientAuth=false</acceptor>
 		</acceptors>
 
 		<!-- TODD: define the connectors so the nodes can communicate -->
