@@ -16,8 +16,6 @@ public class PahoDemo implements ApplicationListener<ApplicationEvent> {
   @Override
   public void onApplicationEvent(ApplicationEvent event) {
 
-    System.out.println(event.toString());
-
     if (event.getClass().equals(ContextRefreshedEvent.class)) {
 
       pahoRunnable = new PahoRunnable();
@@ -32,7 +30,7 @@ public class PahoDemo implements ApplicationListener<ApplicationEvent> {
           pahoRunnable.stop();
           pahoThread.join();
         } catch (Exception e) {
-          e.printStackTrace();
+          System.out.println(e.getMessage());
         }
       }
     }

@@ -1,5 +1,6 @@
 package org.outsrcd.sample.paho;
 
+import java.util.Properties;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -8,12 +9,10 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public class PahoRunnable implements Runnable{  
   
-  String topic = "demo.topic";
-  MemoryPersistence persistence = new MemoryPersistence();
+  String TOPIC = "demo.topic";
   MqttConnectOptions connOpts;
   MqttClient sampleClient;
   volatile boolean stopped = false;
@@ -41,10 +40,16 @@ public class PahoRunnable implements Runnable{
 
     System.out.println(">>> running paho demo...");
     
+    Properties sslProps = new Properties();
+    sslProps.setProperty("com.ibm.ssl.keyStore", "/path/to/client-keystore.jks");
+    sslProps.setProperty("com.ibm.ssl.keyStorePassword", "password");
+    sslProps.setProperty("com.ibm.ssl.keyStoreType", "JKS");
+    
     // set clean session to false, and let paho attempt to connect to any configured url
     connOpts = new MqttConnectOptions();
     connOpts.setCleanSession(false);
     connOpts.setServerURIs(serverUrls);
+    connOpts.setSSLProperties(sslProps);
 
     try {
     
@@ -52,7 +57,7 @@ public class PahoRunnable implements Runnable{
         
           if (sampleClient == null || !sampleClient.isConnected()) {
             connect();
-            sampleClient.subscribe(topic);
+            sampleClient.subscribe(TOPIC);
           }
           
           // generate a random int to publish
@@ -61,14 +66,14 @@ public class PahoRunnable implements Runnable{
           message.setQos(1);
 
           // publish
-          sampleClient.publish(topic, message);
+          sampleClient.publish(TOPIC, message);
           System.out.println(">>> published: " + randomInt);   
           
           // wait 2 seconds
           Thread.sleep(2000);
       }
     } catch (MqttException me) {
-      me.printStackTrace();
+      System.out.println(">>> error: " + me.getMessage());   
     } catch (InterruptedException e) {
       stop();
     }
@@ -82,7 +87,7 @@ public class PahoRunnable implements Runnable{
       try {
         
         if (sampleClient == null) {
-          sampleClient = new MqttClient("ssl://localhost:1883", "paho-demo", persistence);
+          sampleClient = new MqttClient("ssl://localhost:1883", "paho-demo");
           sampleClient.setCallback(callback);
         }       
 
@@ -90,7 +95,9 @@ public class PahoRunnable implements Runnable{
         sampleClient.connect(connOpts);
         connecting = false;
       } catch (MqttException e) {
-        System.out.println(">>> unable to connect to any configured broker");
+        System.out.println(">>> unable to connect to any configured broker: ");
+        System.out.println(e.getMessage());
+
         Thread.sleep(2000);
       }
     }
@@ -106,8 +113,8 @@ public class PahoRunnable implements Runnable{
       try {
         sampleClient.close();
       } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        System.out.println(">>> error: " + e.getMessage());   
+
       }
     }  
   }
